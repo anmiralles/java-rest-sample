@@ -1,0 +1,195 @@
+-- MySQL dump 10.13  Distrib 5.6.19, for osx10.7 (i386)
+--
+-- Host: 127.0.0.1    Database: myturn
+-- ------------------------------------------------------
+-- Server version	5.6.22
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `APPOINTMENT`
+--
+
+DROP TABLE IF EXISTS `APPOINTMENT`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `APPOINTMENT` (
+  `ID` int(11) NOT NULL,
+  `APPOINTMENT` varchar(255) COLLATE latin1_spanish_ci DEFAULT NULL,
+  `CODE` varchar(255) COLLATE latin1_spanish_ci DEFAULT NULL,
+  `DATE_APP` datetime DEFAULT NULL,
+  `ROOM` int(11) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `FK_APPOINTMENT_ROOM` (`ROOM`),
+  CONSTRAINT `FK_APPOINTMENT_ROOM` FOREIGN KEY (`ROOM`) REFERENCES `ROOM` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `APPOINTMENT`
+--
+
+LOCK TABLES `APPOINTMENT` WRITE;
+/*!40000 ALTER TABLE `APPOINTMENT` DISABLE KEYS */;
+INSERT INTO `APPOINTMENT` VALUES (1,'Cita pediatría Macarena','12345','2015-10-12 10:00:00',1);
+/*!40000 ALTER TABLE `APPOINTMENT` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `COMPANY`
+--
+
+DROP TABLE IF EXISTS `COMPANY`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `COMPANY` (
+  `ID` int(11) NOT NULL,
+  `COMPANY` varchar(255) COLLATE latin1_spanish_ci DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `COMPANY`
+--
+
+LOCK TABLES `COMPANY` WRITE;
+/*!40000 ALTER TABLE `COMPANY` DISABLE KEYS */;
+INSERT INTO `COMPANY` VALUES (1,'Quirón Grupo Hospitalario');
+/*!40000 ALTER TABLE `COMPANY` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `CONFIGURATION`
+--
+
+DROP TABLE IF EXISTS `CONFIGURATION`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `CONFIGURATION` (
+  `ID` int(11) NOT NULL,
+  `SMTP_PASS` varchar(255) COLLATE latin1_spanish_ci DEFAULT NULL,
+  `PORT` varchar(255) COLLATE latin1_spanish_ci DEFAULT NULL,
+  `SECURITY` tinyint(1) DEFAULT '0',
+  `SMTP` varchar(255) COLLATE latin1_spanish_ci DEFAULT NULL,
+  `SMTP_USER` varchar(255) COLLATE latin1_spanish_ci DEFAULT NULL,
+  `DELEGATION` int(11) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `FK_CONFIGURATION_DELEGATION` (`DELEGATION`),
+  CONSTRAINT `FK_CONFIGURATION_DELEGATION` FOREIGN KEY (`DELEGATION`) REFERENCES `DELEGATION` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `CONFIGURATION`
+--
+
+LOCK TABLES `CONFIGURATION` WRITE;
+/*!40000 ALTER TABLE `CONFIGURATION` DISABLE KEYS */;
+INSERT INTO `CONFIGURATION` VALUES (1,'p4r4c3t4m0l','25',1,'smtp.gmail.com','zagal81@gmail.com',NULL);
+/*!40000 ALTER TABLE `CONFIGURATION` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `DELEGATION`
+--
+
+DROP TABLE IF EXISTS `DELEGATION`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `DELEGATION` (
+  `ID` int(11) NOT NULL,
+  `DELEGATION` varchar(255) COLLATE latin1_spanish_ci DEFAULT NULL,
+  `COMPANY` int(11) DEFAULT NULL,
+  `CONFIGURATION` int(11) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `FK_DELEGATION_COMPANY` (`COMPANY`),
+  KEY `FK_DELEGATION_CONFIGURATION` (`CONFIGURATION`),
+  CONSTRAINT `FK_DELEGATION_COMPANY` FOREIGN KEY (`COMPANY`) REFERENCES `COMPANY` (`ID`),
+  CONSTRAINT `FK_DELEGATION_CONFIGURATION` FOREIGN KEY (`CONFIGURATION`) REFERENCES `CONFIGURATION` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `DELEGATION`
+--
+
+LOCK TABLES `DELEGATION` WRITE;
+/*!40000 ALTER TABLE `DELEGATION` DISABLE KEYS */;
+INSERT INTO `DELEGATION` VALUES (1,'Clínica Sagrado Corazón',1,1);
+/*!40000 ALTER TABLE `DELEGATION` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ROOM`
+--
+
+DROP TABLE IF EXISTS `ROOM`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ROOM` (
+  `ID` int(11) NOT NULL,
+  `AVERAGE` datetime DEFAULT NULL,
+  `END_HOUR` datetime DEFAULT NULL,
+  `INIT_HOUR` datetime DEFAULT NULL,
+  `ROOM` varchar(255) COLLATE latin1_spanish_ci DEFAULT NULL,
+  `DELEGATION` int(11) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `FK_ROOM_DELEGATION` (`DELEGATION`),
+  CONSTRAINT `FK_ROOM_DELEGATION` FOREIGN KEY (`DELEGATION`) REFERENCES `DELEGATION` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ROOM`
+--
+
+LOCK TABLES `ROOM` WRITE;
+/*!40000 ALTER TABLE `ROOM` DISABLE KEYS */;
+INSERT INTO `ROOM` VALUES (1,'1970-01-01 00:05:00','1970-01-01 18:30:00','1970-01-01 08:30:00','Pediatría',1),(2,'1970-01-01 00:10:00','1970-01-01 18:00:00','1970-01-01 08:00:00','Ginecología',1);
+/*!40000 ALTER TABLE `ROOM` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `SEQUENCE`
+--
+
+DROP TABLE IF EXISTS `SEQUENCE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `SEQUENCE` (
+  `SEQ_NAME` varchar(50) COLLATE latin1_spanish_ci NOT NULL,
+  `SEQ_COUNT` decimal(38,0) DEFAULT NULL,
+  PRIMARY KEY (`SEQ_NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `SEQUENCE`
+--
+
+LOCK TABLES `SEQUENCE` WRITE;
+/*!40000 ALTER TABLE `SEQUENCE` DISABLE KEYS */;
+INSERT INTO `SEQUENCE` VALUES ('SEQ_GEN',0);
+/*!40000 ALTER TABLE `SEQUENCE` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2015-09-16 17:22:01
